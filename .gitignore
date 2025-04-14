@@ -1,0 +1,6 @@
+mydb.sqlite
+node_modules
+ssl/
+cert.pem
+csr.pem
+key.pem

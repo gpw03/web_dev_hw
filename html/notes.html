@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <title>Notes Page</title>
+        <link rel="stylesheet" href="assets/css/styles.css">
+    </head>
+    <form id="noteForm">
+        <input type="text" id="title" name="title" placeholder="Title Your Note:" required>
+        <textarea id="note" name="note" placeholder="Write your note here:"></textarea>
+        <button type="submit">Save Note</button>
+    </form>
+    <form id="deleteNote">
+        <input type="text" id="deleteID" placeholder="Enter a Notes ID to Delete:" required>
+        <button type="submit">Delete</button>
+    </form>
+    <form id="updateNote">
+        <input type="text" id="noteID" name="noteID" placeholder="Enter the ID for the note you want to change:" required>
+        <input type="text" id="newTitle" name="newTitle" placeholder="Enter a new title:" required>
+        <input type="text" id="newNote" name="newNote" placeholder="Enter the updated note:" required>
+        <button type="submit">Update Note</button>
+    </form>
+    <button id="showNotes">Show Notes</button>
+    <button id="logoutButton">Logout</button>
+    <section id="notes"></section>
+    <script src="assets/js/js.js"></script>
+</html>
