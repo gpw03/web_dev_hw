@@ -41,7 +41,8 @@ document.getElementById('showNotes').addEventListener('click', (e) => {
     .then(notes => {
         console.log(notes);
         let output = ''
-        notes.forEach(note => {
+        // Notes is an object with an array notes inside
+        notes.notes.forEach(note => {
             output += `<p><b>ID#:${note.note_id} ${note.note_title}:</b> ${note.note_content}</p>`;
         });
         document.getElementById('notes').innerHTML = output;
