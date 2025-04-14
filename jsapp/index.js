@@ -8,6 +8,7 @@ const path = require('path');
 const cors = require('cors');
 const express = require('express');
 const bcrypt = require('bcryptjs');
+const WebSocket = require('ws')
 
 // Creating the users table
 db.prepare(`CREATE TABLE IF NOT EXISTS users (
@@ -27,6 +28,7 @@ db.prepare(`CREATE TABLE IF NOT EXISTS notes (
 
 const app = express();
 app.use(express.json());
+// Comment out this line for production
 app.use(express.static(path.join(__dirname, '../html')));
 app.use(cors());
 
@@ -149,5 +151,28 @@ app.get('/api', auth, (req, res) => {
     res.status(200).json({ notes });
 });
 
+// I could not re-use the auth function from before becuase I had to send the token as a query param, wss doesnt allow custom headers
+function ws_auth(ws, req) {
+    // Extracting token from url
+    const url = new URL(req.url, `http://${req.headers.host}`);
+    const token = url.searchParams.get('token');
+    if (!token) return false; // Making sure token exists
+
+    try{
+        // If it doesnt exists it throws an error returning false
+        const decoded = jwt.verify(token, 'secret-key');
+        return true;
+    } catch (err) {
+        return false;
+    }
+};
+
 // Start HTTPS Server
-http.createServer(options, app).listen(3000, () => console.log("Server running on https://localhost:3000"));
+const server = http.createServer(options, app).listen(3000, () => console.log("Server running on https://localhost:3000"));
+const wsserver = new WebSocket.WebSocketServer({ server });
+wsserver.on('connection', (ws, req) => {
+    // Check if authorized using function above
+    if (!ws_auth(ws, req)) return;
+    console.log('Client Connected');
+    ws.send(JSON.stringify('hi'));
+});

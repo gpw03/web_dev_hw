@@ -49,3 +49,19 @@ document.getElementById('showNotes').addEventListener('click', (e) => {
     })
     .catch(error => console.error("Error fetching notes:", error));
 });
+
+let wsurl
+if(window.location.protocol == 'http:'){
+    console.log('http ws');
+    wsurl = 'ws://localhost:3000';
+} else{
+    console.log('https wss');
+    wsurl = 'wss://' + window.location.host;
+};
+const token = localStorage.getItem('token');
+wsurl = `${wsurl}?token=${token}`;
+let sock = new WebSocket(wsurl);
+sock.addEventListener('message', ({ data }) => {
+    const parsed = JSON.parse(data);
+    console.log('From Web Socket:', parsed);
+});
