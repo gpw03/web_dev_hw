@@ -27,6 +27,13 @@ db.prepare(`CREATE TABLE IF NOT EXISTS notes (
     FOREIGN KEY (username) REFERENCES users (username)
 )`).run();
 
+// Creating table for our global notes
+db.prepare(`CREATE TABLE IF NOT EXISTS globalNotes (
+    username TEXT,
+    note TEXT
+)`).run();
+
+
 const app = express();
 app.use(express.json());
 app.use(express.static(path.join(__dirname, '../html')));
@@ -126,18 +133,23 @@ app.post('/api/login', async (req, res) => {
 
 //Adding a global note
 app.post('/api/global', auth, (req, res) => {
+
+
     const { globalNote } = req.body;
 
     const { username } = req;
 
     console.log(globalNote, username);
+    const insertNote = db.prepare('INSERT INTO globalNotes (username, note) VALUES (?, ?)');
+
+    insertNote.run(username, globalNote);
+
+    const getNotes = db.prepare('SELECT username, note FROM globalNotes');
+    const notes = getNotes.all();
 
     wsserver.clients.forEach(ws => ws.send(JSON.stringify({
         type: 'newNote',
-        note: {
-            content: globalNote, 
-            username: username
-        }
+        note: notes
     })));
 });
 

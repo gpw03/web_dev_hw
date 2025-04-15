@@ -85,7 +85,9 @@ sock.addEventListener('message', ({ data }) => {
     console.log(parsed);
     if (parsed.type === 'newNote'){
         let output = '';
-        output += `<p><b>Username:${parsed.note.username} </b> ${parsed.note.content}</p>`;
+        parsed.note.forEach(note => {
+            output += `<p><b>Username:${note.username} </b> ${note.note}</p>`;
+        });
         document.getElementById('global').innerHTML = output;
     } else {
         console.log('From Web Socket:', parsed);
