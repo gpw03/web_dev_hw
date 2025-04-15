@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-const http = require('https');
+const http = require('https'); // Change to http for prod
 const fs = require('fs');
 const Database = require('better-sqlite3'); // I am developing on a windows ARM machine, and it does not really support sqlite3
 const db = new Database('mydb.sqlite');
@@ -9,6 +9,7 @@ const cors = require('cors');
 const express = require('express');
 const bcrypt = require('bcryptjs');
 const WebSocket = require('ws')
+
 
 // Creating the users table
 db.prepare(`CREATE TABLE IF NOT EXISTS users (
@@ -28,12 +29,12 @@ db.prepare(`CREATE TABLE IF NOT EXISTS notes (
 
 const app = express();
 app.use(express.json());
-// Comment out this line for production
 app.use(express.static(path.join(__dirname, '../html')));
 app.use(cors());
 
 
 // Load SSL certificates
+// Comment this out for production
 const options = {
     key: fs.readFileSync('ssl/key.pem'),
     cert: fs.readFileSync('ssl/cert.pem')
@@ -169,6 +170,8 @@ function ws_auth(ws, req) {
 
 // Start HTTPS Server
 const server = http.createServer(options, app).listen(3000, () => console.log("Server running on https://localhost:3000"));
+// Uncomment this line for production and comment the line above.
+// const server = http.createServer(app).listen(3000, () => console.log("Server running on https://localhost:3000"));
 const wsserver = new WebSocket.WebSocketServer({ server });
 wsserver.on('connection', (ws, req) => {
     // Check if authorized using function above
