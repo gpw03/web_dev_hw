@@ -10,6 +10,11 @@
         <textarea id="note" name="note" placeholder="Write your note here:"></textarea>
         <button type="submit">Save Note</button>
     </form>
+    <h1>This is the activity notification part.</h1>
+    <form id="globalNotes">
+        <textarea id="globalNote" name="globalNote" placeholder="Enter A Global Note" required></textarea>
+        <button type="submit">Save Global Note</button>
+    </form>
     <form id="deleteNote">
         <input type="text" id="deleteID" placeholder="Enter a Notes ID to Delete:" required>
         <button type="submit">Delete</button>
@@ -23,5 +28,6 @@
     <button id="showNotes">Show Notes</button>
     <button id="logoutButton">Logout</button>
     <section id="notes"></section>
+    <section id="global"></section>
     <script src="assets/js/js.js"></script>
 </html>

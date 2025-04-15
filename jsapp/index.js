@@ -122,6 +122,25 @@ app.post('/api/login', async (req, res) => {
     }
 });
 
+
+
+//Adding a global note
+app.post('/api/global', auth, (req, res) => {
+    const { globalNote } = req.body;
+
+    const { username } = req;
+
+    console.log(globalNote, username);
+
+    wsserver.clients.forEach(ws => ws.send(JSON.stringify({
+        type: 'newNote',
+        note: {
+            content: globalNote, 
+            username: username
+        }
+    })));
+});
+
 //I cant get authorization using the token becuase http-server is http not https
 app.post('/api', auth, (req, res) => {
     console.log("Auth worked. ")

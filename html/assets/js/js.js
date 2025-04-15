@@ -30,6 +30,8 @@ document.getElementById('noteForm').addEventListener("submit", (ev) => {
 
 document.getElementById('showNotes').addEventListener('click', (e) => {
     const token = localStorage.getItem('token');
+
+
     fetch('/api', {
         method: "GET",
         headers: {
@@ -50,6 +52,23 @@ document.getElementById('showNotes').addEventListener('click', (e) => {
     .catch(error => console.error("Error fetching notes:", error));
 });
 
+document.getElementById('globalNotes').addEventListener('submit', (e) => {
+    e.preventDefault();
+    const token = localStorage.getItem('token');
+    const globalNote = document.getElementById('globalNote').value;
+    fetch('/api/global', {
+        method: "POST",
+        headers: {
+            'Content-Type': 'application/json',
+            "Authorization": `Bearer ${token}`
+        },
+        body: JSON.stringify({ globalNote })
+    })
+    .then(response => response.json())
+    .catch(error => console.error("Error fetching notes:", error));
+});
+
+
 let wsurl
 if(window.location.protocol == 'http:'){
     console.log('http ws');
@@ -63,5 +82,12 @@ wsurl = `${wsurl}?token=${token}`;
 let sock = new WebSocket(wsurl);
 sock.addEventListener('message', ({ data }) => {
     const parsed = JSON.parse(data);
-    console.log('From Web Socket:', parsed);
+    console.log(parsed);
+    if (parsed.type === 'newNote'){
+        let output = '';
+        output += `<p><b>Username:${parsed.note.username} </b> ${parsed.note.content}</p>`;
+        document.getElementById('global').innerHTML = output;
+    } else {
+        console.log('From Web Socket:', parsed);
+    }
 });
