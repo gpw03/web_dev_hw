@@ -20,6 +20,7 @@ document.getElementById('loginForm').addEventListener('submit', async function (
         window.location.href = 'notes.html';
       } else {
         console.log('Wrong stuff ');
+        alert('Username or password incorrect.');
       }
     } catch (error) {
       console.error('Error loging in:', error);

@@ -26,6 +26,8 @@ document.getElementById('noteForm').addEventListener("submit", (ev) => {
     .then(data => console.log(data.message))
     .catch(error => console.error("Note did not save: ", error));
     document.getElementById('noteForm').reset();
+    const output = "Click Show Notes to see updated note."
+    document.getElementById('notes').innerHTML = output;
 });
 
 document.getElementById('showNotes').addEventListener('click', (e) => {
@@ -81,6 +83,41 @@ function goFullScreen() {
 document.getElementById('fullScreen').addEventListener("click", () => {
     goFullScreen();
 });
+
+const fileInput = document.querySelector("input[type=file");
+const output = document.getElementById('testDiv');
+
+fileInput.addEventListener("change", async () => {
+    const [file] = fileInput.files;
+
+    if (file) {
+        console.log("In file upload")
+        const title = file.name;
+        const note = await file.text();
+        const token = localStorage.getItem('token');
+
+        console.log("Token being sent:", token);
+
+        fetch ('/api', {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json',
+                "Authorization": `Bearer ${token}`
+            },
+            body: JSON.stringify({ title, note }),
+            redirect: 'follow',
+        })
+        .then(data => console.log(data.message))
+        .catch(error => console.error("Note did not save: ", error));
+        document.getElementById('noteForm').reset();
+        const output = "Click Show Notes to see updated note."
+        document.getElementById('notes').innerHTML = output;
+    } else {
+        alert('File does not exist');
+    }
+});
+
+
 
 let wsurl
 if(window.location.protocol == 'http:'){
