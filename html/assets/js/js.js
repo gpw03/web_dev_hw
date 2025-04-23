@@ -68,6 +68,19 @@ document.getElementById('globalNotes').addEventListener('submit', (e) => {
     .catch(error => console.error("Error fetching notes:", error));
 });
 
+function goFullScreen() {
+    if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen();
+        document.getElementById('fullScreen').textContent = 'Exit full screen mode';
+    } else if (document.exitFullscreen) {
+        document.exitFullscreen();
+        document.getElementById('fullScreen').textContent = 'Go full screen';
+    }
+}
+
+document.getElementById('fullScreen').addEventListener("click", () => {
+    goFullScreen();
+});
 
 let wsurl
 if(window.location.protocol == 'http:'){
@@ -77,6 +90,8 @@ if(window.location.protocol == 'http:'){
     console.log('https wss');
     wsurl = 'wss://' + window.location.host;
 };
+
+
 const token = localStorage.getItem('token');
 wsurl = `${wsurl}?token=${token}`;
 let sock = new WebSocket(wsurl);
